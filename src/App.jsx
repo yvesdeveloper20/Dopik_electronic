@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
@@ -9,6 +9,31 @@ import Contact from './pages/Contact';
 import Newsletter from './pages/Newsletter';
 import WhatsAppButton from './components/WhatsAppButton';
 import './App.css';
+
+// Page title component
+function PageTitle() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const getPageTitle = () => {
+      const path = location.pathname;
+      
+      if (path === '/') return 'Home';
+      if (path === '/shop') return 'Shop';
+      if (path.startsWith('/product/')) return 'Product Details';
+      if (path === '/cart') return 'Cart';
+      if (path === '/about') return 'About';
+      if (path === '/contact') return 'Contact';
+      if (path === '/newsletter') return 'Newsletter';
+      return 'Page';
+    };
+    
+    const pageTitle = getPageTitle();
+    document.title = `${pageTitle} | DOPIK ELECTRONICS`;
+  }, [location]);
+  
+  return null;
+}
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -67,6 +92,7 @@ function App() {
 
   return (
     <Router>
+      <PageTitle />
       <div className="App">
         <Routes>
           <Route path="/" element={<Home cartItemsCount={cartItemsCount} addToCart={addToCart} />} />
@@ -101,9 +127,9 @@ function App() {
               />
             } 
           />
-          <Route path="/about" element={<About cartItemsCount={cartItemsCount} />} />
-          <Route path="/contact" element={<Contact cartItemsCount={cartItemsCount} />} />
-          <Route path="/newsletter" element={<Newsletter cartItemsCount={cartItemsCount} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/newsletter" element={<Newsletter />} />
         </Routes>
         <WhatsAppButton />
       </div>
